@@ -2,6 +2,8 @@
 
 ;;;###autoload 
 (defun mu4e-save-to-eml (&optional msg dir)
+  "Save MSG (or message at point) in DIR according
+to a filename rule defined by me." 
   (interactive)
   (unless msg (setq msg (mu4e-message-at-point)))
   (cl-flet* ((get-display-name
