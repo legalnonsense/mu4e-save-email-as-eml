@@ -51,4 +51,7 @@ to a filename rule defined by me.  Mark emails using
       (make-file-name msg))
      1)))
 
+(add-to-list 'mu4e-headers-actions '("export as eml" . mu4e-save-to-eml))
+(add-to-list 'mu4e-view-actions '("export as eml" . mu4e-save-to-eml))
+
 (provide 'mu4e-save-to-eml)
