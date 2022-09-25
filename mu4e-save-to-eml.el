@@ -22,23 +22,26 @@ to a filename rule defined by me."
 		    (cdr cell)
 		    "")))
 	     (make-file-name (msg)
-			     (s-replace "/" ""
-					(let* ((msg (mu4e-message-at-point))
-					       (to-field (plist-get msg :to))
-					       (first-to (car to-field))
-					       (to-etal-p (cdr to-field))
-					       ;; if there is a name in the to field
-					       (from (car (plist-get msg :from))))
-					  (concat 
-					   (format-time-string "%F" (mu4e-message-field msg :date))
-					   " - "
-					   (get-display-name from)
-					   " to "
-					   (get-display-name first-to)
-					   (if to-etal-p " et al" "")
-					   " - "
-					   (or (mu4e-message-field msg :subject) "No subject")
-					   ".eml")))))
+			     ;; people put
+			     (replace-regexp-in-string
+			      "[#%&{}<>*?/$!'\":@+`|=]"
+			      "" 
+			      (let* ((msg (mu4e-message-at-point))
+				     (to-field (plist-get msg :to))
+				     (first-to (car to-field))
+				     (to-etal-p (cdr to-field))
+				     ;; if there is a name in the to field
+				     (from (car (plist-get msg :from))))
+				(concat 
+				 (format-time-string "%F" (mu4e-message-field msg :date))
+				 " - "
+				 (get-display-name from)
+				 " to "
+				 (get-display-name first-to)
+				 (if to-etal-p " et al" "")
+				 " - "
+				 (or (mu4e-message-field msg :subject) "No subject")
+				 ".eml")))))
     (copy-file
      (mu4e-message-field msg :path)
      (concat 
