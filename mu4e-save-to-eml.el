@@ -22,7 +22,6 @@ to a filename rule defined by me."
 		    (cdr cell)
 		    "")))
 	     (make-file-name (msg)
-			     ;; people put
 			     (replace-regexp-in-string
 			      "[#%&{}<>*?/$!'\":@+`|=]"
 			      "" 
