@@ -1,19 +1,6 @@
 ;; -*- lexical-binding: t; -*-
 
-(defun djcb-mu4e-copy-message-at-point (&optional dir)
-  "Copy message at point to somewhere else as <date>_<subject>.eml."
-  (interactive)
-  (let* ((msg (mu4e-message-at-point))
-         (target
-
-	  (format "%s - %s.eml"
-                  (format-time-string "%F" (mu4e-message-field msg :date))
-                  (or (mu4e-message-field msg :subject) "No subject"))))
-    (copy-file
-     (mu4e-message-field msg :path)
-     (format "%s/%s" (or dir (read-directory-name "Copy message to: ")) target) 1)))
-
-
+;;;###autoload 
 (defun mu4e-save-to-eml (&optional msg dir)
   (interactive)
   (unless msg (setq msg (mu4e-message-at-point)))
@@ -54,12 +41,9 @@
      (mu4e-message-field msg :path)
      (concat 
       (or dir
-	  (read-directory-name "Copy message to: "))
+	  (read-directory-name "Copy message to: " "~/legal/Dropbox/" ))
       "/"
       (make-file-name msg))
      1)))
 
-
-
-
-
+(provide 'mu4e-save-to-eml)
