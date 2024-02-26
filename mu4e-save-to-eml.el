@@ -1,5 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 
+(defcustom mu4e-save-to-eml-default-dir "~/"
+  "default save dir")
 
 (defun mu4e-save-to-eml (&optional msg dir)
   "Save MSG (or message at point) in DIR according
@@ -9,18 +11,19 @@ to a filename rule defined by me.  Mark emails using
   (unless msg (setq msg (mu4e-message-at-point)))
   (cl-flet* ((get-display-name
 	      (cell)
-	      (if (car cell)
-		  ;; try to use initials
-		  (if-let ((initials (s-split " " (car cell) t)))
-		      (cl-loop for initial in initials concat (when (substring initial 0 1)
+	      (if-let ((name (plist-get cell :name)))
+		  (if-let ((initials (s-split " " name t)))
+		      (cl-loop for initial in initials
+			       concat (when (substring initial 0 1)
 								(substring initial 0 1)))
 		    ;; otherwise just use the entire name 
-		    (car cell))
+		    name)
 		;; if there's no name field, use the address up to the @
 		;; otherwise use the entire address
-		(or (and (stringp (cdr cell))
-			 (car (s-split "@" (cdr cell) t)))
-		    (cdr cell)
+		(if-let ((email (plist-get cell :email)))
+		    (if-let ((short (car (s-split "@" (plist-get cell :email) t))))
+			short
+		      email)	    
 		    "")))
 	     (make-file-name (msg)
 			     (replace-regexp-in-string
@@ -46,7 +49,7 @@ to a filename rule defined by me.  Mark emails using
      (mu4e-message-field msg :path)
      (concat 
       (or dir
-	  (read-directory-name "Copy message to: " "~/legal/Dropbox/" ))
+	  (read-directory-name "Copy message to: " mu4e-save-to-eml-default-dir ))
       "/"
       (make-file-name msg))
      1)))
