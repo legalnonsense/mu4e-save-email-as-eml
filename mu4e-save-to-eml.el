@@ -1,5 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 
+(require 'mu4e)
+
 (defcustom mu4e-save-to-eml-default-dir "~/"
   "default save dir")
 
@@ -19,7 +21,7 @@ to a filename rule defined by me.  Mark emails using
 		    ;; otherwise just use the entire name 
 		    name)
 		;; if there's no name field, use the address up to the @
-		;; otherwise use the entire address
+		;; otherwise use the entire address, otherwise use an empty string
 		(if-let ((email (plist-get cell :email)))
 		    (if-let ((short (car (s-split "@" (plist-get cell :email) t))))
 			short
